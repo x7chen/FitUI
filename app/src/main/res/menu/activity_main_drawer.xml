@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_edit"
+            android:title="我的资料" />
+        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_manage"
+            android:title="手环绑定" />
+    </group>
+
+    <item android:title="手环设置">
+        <menu>
+            <item android:id="@+id/nav_alarm" android:icon="@android:drawable/ic_menu_manage"
+                android:title="闹钟" />
+            <item android:id="@+id/nav_sit_long" android:icon="@android:drawable/ic_menu_share"
+                android:title="久坐" />
+            <item android:id="@+id/nav_target" android:icon="@android:drawable/ic_menu_send"
+                android:title="目标" />
+            <item android:id="@+id/nav_hour_format" android:icon="@android:drawable/ic_menu_share"
+                android:title="12/24小时制" />
+            <item android:id="@+id/nav_hand" android:icon="@android:drawable/ic_menu_send"
+                android:title="左右手" />
+            <item android:id="@+id/nav_hour_phone" android:icon="@android:drawable/ic_menu_share"
+                android:title="来电提醒" />
+            <item android:id="@+id/nav_message" android:icon="@android:drawable/ic_menu_send"
+                android:title="信息提醒" />
+        </menu>
+    </item>
+    <item android:title="版本">
+        <menu>
+            <item android:id="@+id/nav_upgrade" android:icon="@android:drawable/ic_menu_upload"
+                android:title="升级" />
+            <item android:id="@+id/nav_abort" android:icon="@android:drawable/ic_menu_info_details"
+                android:title="关于" />
+        </menu>
+    </item>
+
+</menu>
