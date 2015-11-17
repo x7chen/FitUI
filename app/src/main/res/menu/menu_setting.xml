@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item android:id="@+id/action_edit"
+    <item android:id="@+id/toolbar_scan"
         android:orderInCategory="80"
         android:title="fresh"
         android:icon="@android:drawable/ic_menu_manage"

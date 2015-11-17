@@ -28,6 +28,8 @@
             android:label="@string/bond_title"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <service android:name=".dfu.DfuService"/>
+
     </application>
 
 </manifest>

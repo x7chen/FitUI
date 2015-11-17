@@ -31,7 +31,7 @@ import no.nordicsemi.android.dfu.DfuServiceInitiator;
 /**
  * Created by Administrator on 2015/10/16.
  */
-public class PacketParserService extends Service {
+public class PacketParser {
 
     private int mVERSION = 110;
 
@@ -54,7 +54,6 @@ public class PacketParserService extends Service {
     private ArrayList<SleepData> mSleepData = new ArrayList<SleepData>();
     private ArrayList<SleepSetting> mSleepSetting = new ArrayList<SleepSetting>();
     private DailyData mDailyData = new DailyData();
-    private LocalBinder mBinder = new LocalBinder();
 
     private TimerThread sendTimerThread;
     private TimerThread receiveTimerThread;
@@ -72,7 +71,17 @@ public class PacketParserService extends Service {
     private int mFileTransferStatus = NO_TRANSFER;
     private boolean isDFUServiceFound = false;
     private boolean isDeviceConnected = false;
+    private Context mContext;
 
+    public PacketParser(Context context) {
+        mContext = context;
+        sendTimerThread = new TimerThread().setStatus(TimerThread.STOP).setWhat(0xAA);
+        sendTimerThread.start();
+        receiveTimerThread = new TimerThread().setStatus(TimerThread.STOP).setWhat(0xBB);
+        receiveTimerThread.start();
+        mNusManager = new NusManager();
+        mNusManager.registerCallbacks(nusManagerCallBacks);
+    }
 
     final android.os.Handler mHandler = new android.os.Handler() {
         @Override
@@ -106,43 +115,10 @@ public class PacketParserService extends Service {
         }
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    public class LocalBinder extends Binder {
-        public PacketParserService getService() {
-            return PacketParserService.this;
-        }
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        final Intent intent = new Intent(this, NusManager.class);
-        startService(intent);
-        sendTimerThread = new TimerThread().setStatus(TimerThread.STOP).setWhat(0xAA);
-        sendTimerThread.start();
-        receiveTimerThread = new TimerThread().setStatus(TimerThread.STOP).setWhat(0xBB);
-        receiveTimerThread.start();
-        mNusManager = new NusManager();
-        mNusManager.registerCallbacks(nusManagerCallBacks);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        final Intent intent = new Intent(this, NusManager.class);
-        stopService(intent);
-        sendTimerThread.setStatus(TimerThread.EXIT);
-        receiveTimerThread.setStatus(TimerThread.EXIT);
-    }
 
     BluetoothDevice getDevice(String address) {
         if (mBluetoothManager == null) {
-            mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            mBluetoothManager = (BluetoothManager) (mContext.getSystemService(Context.BLUETOOTH_SERVICE));
         }
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
@@ -155,7 +131,7 @@ public class PacketParserService extends Service {
 
     public void connect(String address) {
         mDevice = getDevice(address);
-        mNusManager.connect(getApplicationContext(), mDevice);
+        mNusManager.connect(mContext, mDevice);
     }
 
     public BluetoothDevice getDevice() {
@@ -194,7 +170,7 @@ public class PacketParserService extends Service {
                 .setDeviceName(mDevice.getName())
                 .setKeepBond(keepBond);
         starter.setZip(mFilePath+newestFileName);
-        starter.start(this, DfuService.class);
+        starter.start(mContext, DfuService.class);
     }
 
     public boolean getConnnetStatus() {
@@ -931,7 +907,7 @@ public class PacketParserService extends Service {
             return;
         }
         for (int i = 0; i < contact.length(); i++) {
-            packetValue.appendValue(hzk16.getMatrix(getApplicationContext(), contact.substring(i, i + 1)));
+            packetValue.appendValue(hzk16.getMatrix(mContext, contact.substring(i, i + 1)));
         }
         send_packet.setPacketValue(packetValue, true);
         send_packet.print();
@@ -949,7 +925,7 @@ public class PacketParserService extends Service {
             return;
         }
         for (int i = 0; i < info.length(); i++) {
-            packetValue.appendValue(hzk16.getMatrix(getApplicationContext(), info.substring(i, i + 1)));
+            packetValue.appendValue(hzk16.getMatrix(mContext, info.substring(i, i + 1)));
         }
         send_packet.setPacketValue(packetValue, true);
         send_packet.print();
@@ -1259,7 +1235,7 @@ public class PacketParserService extends Service {
             BLE_CONNECT_STATUS = false;
             Intent intent = new Intent(ACTION_PACKET_HANDLE);
             intent.putExtra("CONN", BLE_CONNECT_STATUS);
-            sendBroadcast(intent);
+            mContext.sendBroadcast(intent);
             if (mPacketCallBack != null) {
                 mPacketCallBack.onConnectStatusChanged(false);
             }
@@ -1336,7 +1312,7 @@ public class PacketParserService extends Service {
             BLE_CONNECT_STATUS = true;
             Intent intent = new Intent(ACTION_PACKET_HANDLE);
             intent.putExtra("CONN", BLE_CONNECT_STATUS);
-            sendBroadcast(intent);
+            mContext.sendBroadcast(intent);
             if (mPacketCallBack != null) {
                 mPacketCallBack.onConnectStatusChanged(true);
             }

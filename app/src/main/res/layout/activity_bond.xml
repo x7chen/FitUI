@@ -5,4 +5,9 @@
     tools:context="com.x7chen.dev.fitui.BondActivity">
     <include layout="@layout/app_bar_setting" android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listView_Device"
+        android:layout_marginTop="80dp" />
 </RelativeLayout>

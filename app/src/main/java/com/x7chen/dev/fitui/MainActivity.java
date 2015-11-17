@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        RelativeLayout layout = (RelativeLayout)findViewById(R.id.root_activity);
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.root_activity);
 //        layout.addView(new Button(this));
 
         layout.addView(new BarChart().execute(this));
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == 0x123){
-            ArrayList<PacketParserService.Alarm> alarm_list = data.getParcelableArrayListExtra("ALARM_LIST");
+        if (resultCode == 0x123) {
+            ArrayList<PacketParser.Alarm> alarm_list = data.getParcelableArrayListExtra("ALARM_LIST");
         }
     }
 
@@ -99,10 +99,10 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_user_profile) {
             // Handle the camera action
         } else if (id == R.id.nav_bond) {
-            Intent intent = new Intent(this,BondActivity.class);
+            Intent intent = new Intent(this, BondActivity.class);
             startActivityForResult(intent, 123);
         } else if (id == R.id.nav_alarm) {
-            Intent intent = new Intent(this,AlarmActivity.class);
+            Intent intent = new Intent(this, AlarmActivity.class);
             startActivityForResult(intent, 123);
         } else if (id == R.id.nav_hand) {
 
@@ -116,4 +116,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

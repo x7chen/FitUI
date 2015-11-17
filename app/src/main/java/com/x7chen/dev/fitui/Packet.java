@@ -17,11 +17,11 @@ public class Packet {
     CRC16 crc16 = new CRC16();
     int mPacketError;
 
-    public Packet(byte[] value) {
+    Packet(byte[] value) {
 
     }
 
-    public Packet() {
+    Packet() {
 
     }
 
