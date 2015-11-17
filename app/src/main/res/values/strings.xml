@@ -5,4 +5,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="alarm_title">闹钟</string>
+    <string name="bond_title">手环绑定</string>
+    <string name="long_sit_title">久坐提醒</string>
+    <string name="target_title">目标步数</string>
 </resources>

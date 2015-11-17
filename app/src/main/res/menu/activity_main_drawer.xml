@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_edit"
+        <item android:id="@+id/nav_user_profile" android:icon="@android:drawable/ic_menu_edit"
             android:title="我的资料" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_manage"
+        <item android:id="@+id/nav_bond" android:icon="@android:drawable/ic_menu_manage"
             android:title="手环绑定" />
     </group>
 
@@ -20,9 +20,9 @@
                 android:title="12/24小时制" />
             <item android:id="@+id/nav_hand" android:icon="@android:drawable/ic_menu_send"
                 android:title="左右手" />
-            <item android:id="@+id/nav_hour_phone" android:icon="@android:drawable/ic_menu_share"
+            <item android:id="@+id/nav_phone_notify" android:icon="@android:drawable/ic_menu_share"
                 android:title="来电提醒" />
-            <item android:id="@+id/nav_message" android:icon="@android:drawable/ic_menu_send"
+            <item android:id="@+id/nav_message_notify" android:icon="@android:drawable/ic_menu_send"
                 android:title="信息提醒" />
         </menu>
     </item>
