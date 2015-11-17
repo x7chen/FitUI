@@ -24,7 +24,7 @@ public class BondActivity extends AppCompatActivity {
     public boolean mScanning;
     private Handler mHandler = new Handler();
     private static final long SCAN_PERIOD = 10000;
-    public PacketParser mPacketParser;
+    private PacketParser mPacketParser;
 
     PacketParser.CallBack callBack = new PacketParser.CallBack() {
         @Override
@@ -72,7 +72,9 @@ public class BondActivity extends AppCompatActivity {
             }
         });
 
-        mPacketParser =new PacketParser(this);
+
+        ApplicationContextHelper applicationContextHelper = (ApplicationContextHelper)getApplicationContext();
+        mPacketParser = applicationContextHelper.getPacketParser();
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {

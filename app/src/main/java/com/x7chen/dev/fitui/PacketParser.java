@@ -898,7 +898,7 @@ public class PacketParser {
         resent_cnt = 3;
     }
 
-    public void telNotify(String contact) throws IOException {
+    public void telNotify(AlarmActivity alarmActivity, String contact) throws IOException {
         Packet.PacketValue packetValue = new Packet.PacketValue();
         packetValue.setCommandId((byte) (0x04));
         packetValue.setKey((byte) (0x11));

@@ -10,13 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private PacketParser mPacketParser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mPacketParser =new PacketParser(getApplicationContext());
+    ApplicationContextHelper applicationContextHelper = (ApplicationContextHelper)getApplicationContext();
+        applicationContextHelper.setPacketParser(mPacketParser);
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -45,7 +49,8 @@ public class MainActivity extends AppCompatActivity
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.root_activity);
 //        layout.addView(new Button(this));
 
-        layout.addView(new BarChart().execute(this));
+        View mBarChart = new BarChart().execute(this);
+        layout.addView(mBarChart);
 
 
     }
