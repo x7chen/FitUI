@@ -1,6 +1,7 @@
 package com.x7chen.dev.fitui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private PacketParser mPacketParser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +27,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mPacketParser =new PacketParser(getApplicationContext());
-    ApplicationContextHelper applicationContextHelper = (ApplicationContextHelper)getApplicationContext();
+        mPacketParser = new PacketParser(getApplicationContext());
+        ApplicationContextHelper applicationContextHelper = (ApplicationContextHelper) getApplicationContext();
         applicationContextHelper.setPacketParser(mPacketParser);
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
