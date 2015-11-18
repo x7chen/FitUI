@@ -63,11 +63,13 @@ public class BarChart {
         renderer.addSeriesRenderer(r);
         renderer.setApplyBackgroundColor(true);
         renderer.setBackgroundColor(Color.TRANSPARENT);
-        renderer.setMarginsColor(Color.WHITE);
+        renderer.setMarginsColor(R.drawable.light);
+        int[] margins = {0,100,0,0};
+        renderer.setMargins(margins);
+        renderer.setLegendHeight(1);
+        renderer.setFitLegend(true);
         renderer.setZoomEnabled(false, false);
-        renderer.setPanEnabled(false, false);
-        renderer.setLabelsTextSize(15);
-        renderer.setLabelsColor(Color.BLACK);
+        renderer.setPanEnabled(true, false);
         renderer.setBarWidth(20F);
         setChartSettings(renderer);
         return renderer;
@@ -77,12 +79,19 @@ public class BarChart {
      * setChartSettings 方法设置了下坐标轴样式。
      */
     private void setChartSettings(XYMultipleSeriesRenderer renderer) {
-        renderer.setChartTitle("战绩分析");
-        renderer.setXTitle("横坐标");
-        renderer.setYTitle("纵坐标");
+        renderer.setChartTitle("阶段步数");
+        renderer.setAxisTitleTextSize(50);
+        renderer.setLegendTextSize(50);
+        renderer.setChartTitleTextSize(50);
+        renderer.setPointSize(50);
+        renderer.setLabelsTextSize(30);
+        renderer.setYLabelsPadding(50);
+        renderer.setXLabelsPadding(0);
+        renderer.setXAxisColor(Color.BLUE);
         renderer.setXAxisMin(0.5);
         renderer.setXAxisMax(10.5);
         renderer.setYAxisMin(0);
         renderer.setYAxisMax(500);
+        renderer.setShowLegend(false);
     }
 }

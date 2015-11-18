@@ -1,7 +1,7 @@
 package com.x7chen.dev.fitui;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,13 +12,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private PacketParser mPacketParser;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +48,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.root_activity);
-//        layout.addView(new Button(this));
+        VerticalProgressBar progressBar = (VerticalProgressBar) findViewById(R.id.progressBar);
+        progressBar.setProgress(66);
+        progressBar.setIndeterminate(false);
 
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.ChartLayout);
         View mBarChart = new BarChart().execute(this);
         layout.addView(mBarChart);
 
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 0x123) {
-            ArrayList<PacketParser.Alarm> alarm_list = data.getParcelableArrayListExtra("ALARM_LIST");
-        }
     }
 
     @Override
@@ -91,6 +85,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            progressBar.setProgress(56);
+            progressBar.setIndeterminate(false);
+//            progressBar.setVisibility(View.INVISIBLE);
             return true;
         }
 
@@ -107,10 +104,10 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_bond) {
             Intent intent = new Intent(this, BondActivity.class);
-            startActivityForResult(intent, 123);
+            startActivity(intent);
         } else if (id == R.id.nav_alarm) {
             Intent intent = new Intent(this, AlarmActivity.class);
-            startActivityForResult(intent, 123);
+            startActivity(intent);
         } else if (id == R.id.nav_hand) {
 
 //        } else if (id == R.id.nav_share) {
