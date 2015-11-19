@@ -26,38 +26,6 @@ public class BondActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 10000;
     private PacketParser mPacketParser;
 
-    PacketParser.CallBack callBack = new PacketParser.CallBack() {
-        @Override
-        public void onSendSuccess() {
-            Log.i(NusManager.TAG, "Command Send Success!");
-        }
-
-        @Override
-        public void onSendFailure() {
-
-        }
-
-        @Override
-        public void onTimeOut() {
-
-        }
-
-        @Override
-        public void onConnectStatusChanged(boolean status) {
-            Log.i(NusManager.TAG, "Connect Status Changed:" + status);
-        }
-
-        @Override
-        public void onDataReceived(byte category) {
-
-        }
-
-        @Override
-        public void onCharacteristicNotFound() {
-            Log.i(NusManager.TAG, "onCharacteristicNotFound.");
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +80,6 @@ public class BondActivity extends AppCompatActivity {
                     return;
                 } else {
                     Toast.makeText(BondActivity.this, "getPacketParserService is ready.", Toast.LENGTH_SHORT).show();
-                    mPacketParser.registerCallback(callBack);
                 }
 
                 if (mPacketParser.getConnnetStatus() == false) {
@@ -145,7 +112,7 @@ public class BondActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_setting, menu);
+        getMenuInflater().inflate(R.menu.menu_refresh, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

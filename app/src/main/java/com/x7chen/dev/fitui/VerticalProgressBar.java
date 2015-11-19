@@ -33,11 +33,11 @@ public class VerticalProgressBar extends ProgressBar {
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(heightMeasureSpec, widthMeasureSpec);
-        setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());//互换宽高值  
+        setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());//互换宽高值
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(h, w, oldw, oldh);//互换宽高值  
+        super.onSizeChanged(h, w, oldw, oldh);//互换宽高值
     }
 }

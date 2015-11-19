@@ -954,16 +954,16 @@ public class PacketParser {
                 mSleepData.clear();
                 Random random = new Random();
 
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < 60; i++) {
                     SportData sportData = new SportData();
                     sportData.Year = year;
                     sportData.Month = month;
                     sportData.Day = day;
                     sportData.Hour = Math.abs(random.nextInt()) % 24;
                     sportData.Minute = (Math.abs(random.nextInt()) % 4) * 15;
-                    sportData.Steps = Math.abs(random.nextInt()) % 1000;
-                    sportData.Calory = Math.abs(random.nextInt()) % 1000;
-                    sportData.Distance = Math.abs(random.nextInt()) % 1000;
+                    sportData.Steps = Math.abs(random.nextInt()) % 100;
+                    sportData.Calory = Math.abs(random.nextInt()) % 100;
+                    sportData.Distance = Math.abs(random.nextInt()) % 100;
                     mSportData.add(sportData);
                 }
                 for (int i = 0; i < 10; i++) {

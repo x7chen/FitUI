@@ -1,7 +1,6 @@
 package com.x7chen.dev.fitui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,16 +8,120 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    ApplicationContextHelper applicationContextHelper;
     private PacketParser mPacketParser;
-    ProgressBar progressBar;
+    PacketParser.CallBack mPacketParserCallBack = new PacketParser.CallBack() {
+        @Override
+        public void onSendSuccess() {
+
+        }
+
+        @Override
+        public void onSendFailure() {
+
+        }
+
+        @Override
+        public void onTimeOut() {
+
+        }
+
+        @Override
+        public void onConnectStatusChanged(boolean status) {
+
+        }
+
+        @Override
+        public void onDataReceived(byte category) {
+            StringBuilder stringBuilder;
+            Log.i(NusManager.TAG, "sport data mocked");
+            switch (category) {
+                case PacketParser.RECEIVED_DAILY_DATA:
+                    break;
+                case PacketParser.RECEIVED_SPORT_DATA:
+                    List<PacketParser.SportData> sportDataList;
+                    List<PacketParser.SleepData> sleepDataList;
+
+                    if (mPacketParser != null) {
+                        sportDataList = mPacketParser.getSportDataList();
+                        int[] steps = new int[96];
+                        for (PacketParser.SportData sportData : sportDataList) {
+                            int index = sportData.Hour * 4 + sportData.Minute / 15;
+                            steps[index] = sportData.Steps;
+                        }
+                        final int[] data = steps;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                UpdateChart(data);
+                            }
+                        });
+
+                        stringBuilder = new StringBuilder();
+                        if (sportDataList.size() != 0) {
+                            stringBuilder.append("[SportData]\n");
+                            for (PacketParser.SportData sportData : sportDataList) {
+                                stringBuilder.append(sportData.Year + "." + sportData.Month + "." + sportData.Day + "  ");
+                                stringBuilder.append(sportData.Hour + ":" + sportData.Minute + "\n");
+                                stringBuilder.append("Steps:" + sportData.Steps + "  Distance:" + sportData.Distance + "  Calories:" + sportData.Calory + "\n");
+                            }
+                            sportDataList.clear();
+                            stringBuilder.append("\n\n");
+                            PacketParser.writeLog(stringBuilder.toString());
+                        }
+                        sleepDataList = mPacketParser.getSleepDataList();
+                        stringBuilder = new StringBuilder();
+                        if (sleepDataList.size() != 0) {
+                            stringBuilder.append("[SleepData]\n");
+                            for (PacketParser.SleepData sleepData : sleepDataList) {
+                                stringBuilder.append(sleepData.Year + "." + sleepData.Month + "." + sleepData.Day + "  ");
+                                stringBuilder.append(sleepData.Hour + ":" + sleepData.Minute + "  ");
+                                stringBuilder.append("Mode:" + sleepData.Mode + "\n");
+                            }
+                            sleepDataList.clear();
+                            stringBuilder.append("\n\n");
+                            PacketParser.writeLog(stringBuilder.toString());
+                        }
+                    }
+                    break;
+                case PacketParser.RECEIVED_ALARM:
+                    final AlarmActivity alarmActivity = applicationContextHelper.getAlarmActivity();
+                    if (alarmActivity == null) {
+                        break;
+                    }
+                    final ArrayList<PacketParser.Alarm> alarms = mPacketParser.getAlarmsList();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (PacketParser.Alarm alarm : alarms) {
+                                alarmActivity.mAlarmListAdapter.addAlarm(alarm);
+                            }
+                            alarmActivity.mAlarmListAdapter.notifyDataSetChanged();
+                        }
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        @Override
+        public void onCharacteristicNotFound() {
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +131,10 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mPacketParser = new PacketParser(getApplicationContext());
-        ApplicationContextHelper applicationContextHelper = (ApplicationContextHelper) getApplicationContext();
+        mPacketParser.registerCallback(mPacketParserCallBack);
+        applicationContextHelper = (ApplicationContextHelper) getApplicationContext();
         applicationContextHelper.setPacketParser(mPacketParser);
+        applicationContextHelper.setMainActivity(this);
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -52,11 +157,13 @@ public class MainActivity extends AppCompatActivity
         progressBar.setProgress(66);
         progressBar.setIndeterminate(false);
 
+    }
+
+    private void UpdateChart(int[] data) {
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.ChartLayout);
-        View mBarChart = new BarChart().execute(this);
+        View mBarChart = new BarChart(this).UpdateBarChar(data);
+        layout.removeAllViews();
         layout.addView(mBarChart);
-
-
     }
 
     @Override
@@ -72,7 +179,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_refresh, menu);
         return true;
     }
 
@@ -84,9 +191,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            progressBar.setProgress(56);
-            progressBar.setIndeterminate(false);
+        if (id == R.id.toolbar_refresh) {
+            mPacketParser.mock();
 //            progressBar.setVisibility(View.INVISIBLE);
             return true;
         }

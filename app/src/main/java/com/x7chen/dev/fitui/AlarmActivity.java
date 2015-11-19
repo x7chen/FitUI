@@ -20,52 +20,6 @@ import java.util.ArrayList;
 public class AlarmActivity extends AppCompatActivity {
     AlarmListAdapter mAlarmListAdapter;
     PacketParser mPacketParser;
-    PacketParser.CallBack mPacketParserCallBack = new PacketParser.CallBack() {
-        @Override
-        public void onSendSuccess() {
-
-        }
-
-        @Override
-        public void onSendFailure() {
-
-        }
-
-        @Override
-        public void onTimeOut() {
-
-        }
-
-        @Override
-        public void onConnectStatusChanged(boolean status) {
-
-        }
-
-        @Override
-        public void onDataReceived(byte category) {
-            switch (category) {
-                case PacketParser.RECEIVED_ALARM:
-                    final ArrayList<PacketParser.Alarm> alarms = mPacketParser.getAlarmsList();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (PacketParser.Alarm alarm : alarms) {
-                                mAlarmListAdapter.addAlarm(alarm);
-                            }
-                            mAlarmListAdapter.notifyDataSetChanged();
-                        }
-                    });
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        @Override
-        public void onCharacteristicNotFound() {
-
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +37,7 @@ public class AlarmActivity extends AppCompatActivity {
         });
         ApplicationContextHelper applicationContextHelper = (ApplicationContextHelper) getApplicationContext();
         mPacketParser = applicationContextHelper.getPacketParser();
-        mPacketParser.registerCallback(mPacketParserCallBack);
+        applicationContextHelper.setAlarmActivity(this);
         ListView alarmlistview = (ListView) findViewById(R.id.alarm_listView);
         mAlarmListAdapter = new AlarmListAdapter(this);
         alarmlistview.setAdapter(mAlarmListAdapter);
