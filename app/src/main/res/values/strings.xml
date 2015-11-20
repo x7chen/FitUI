@@ -10,6 +10,7 @@
     <string name="long_sit_title">久坐提醒</string>
     <string name="target_title">目标步数</string>
     <string name="toolbar_menu_complete">完成</string>
+    <string name="toolbar_menu_add">添加</string>
     <string name="toolbar_menu_refresh">刷新</string>
     <string name="scan_connected">已连接</string>
     <string name="steps">步</string>
