@@ -14,6 +14,7 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
+import java.util.Calendar;
 import java.util.Random;
 
 /**
@@ -100,18 +101,25 @@ public class BarChart {
         @Override
         public StringBuffer format(double value, StringBuffer buffer, FieldPosition field) {
             StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append(String.format("%02d", ((int) (value) / 4)));
-            stringBuffer.append(":");
-            stringBuffer.append(String.format("%02d", ((int) (value) % 4) * 15));
+            if (value > 0) {
+                stringBuffer.append(String.format("%02d", ((int) (value - 1) / 4)));
+                stringBuffer.append(":");
+                stringBuffer.append(String.format("%02d", ((int) (value - 1) % 4) * 15));
+            } else {
+                value += 96;
+                stringBuffer.append(String.format("%02d", ((int) (value - 1) / 4)));
+                stringBuffer.append(":");
+                stringBuffer.append(String.format("%02d", ((int) (value - 1) % 4) * 15));
+            }
             return stringBuffer;
         }
 
         @Override
         public StringBuffer format(long value, StringBuffer buffer, FieldPosition field) {
             StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append(String.format("%02d", (value / 4)));
+            stringBuffer.append(String.format("%02d", ((value - 1) / 4)));
             stringBuffer.append(":");
-            stringBuffer.append(String.format("%02d", (value % 4) * 15));
+            stringBuffer.append(String.format("%02d", ((value - 1) % 4) * 15));
             return stringBuffer;
         }
 
@@ -125,6 +133,23 @@ public class BarChart {
      * setChartSettings 方法设置了下坐标轴样式。
      */
     private void setChartSettings(XYMultipleSeriesRenderer renderer) {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int Xmax = hour * 4 + (minute / 15);
+        int Xmin;
+        if (Xmax > 24) {
+            if (Xmax % 2 == 0) {
+                Xmax = Xmax + 2;
+                Xmin = Xmax - 24;
+            } else {
+                Xmax = Xmax + 3;
+                Xmin = Xmax - 24;
+            }
+        } else {
+            Xmin = 0;
+            Xmax = 24;
+        }
         renderer.setAxisTitleTextSize(50);
         renderer.setLegendTextSize(50);
         renderer.setChartTitleTextSize(50);
@@ -132,16 +157,16 @@ public class BarChart {
         renderer.setLabelsTextSize(30);
         renderer.setXLabelsColor(Color.GRAY);
         renderer.setYLabelsPadding(50);
-        renderer.setXLabelsPadding(10);
-        renderer.setXLabelsAngle(315);
+        renderer.setXLabelsPadding(20);
+        renderer.setXLabelsAngle(300);
         renderer.setXLabelFormat(new TimeLabel());
         renderer.setXAxisColor(Color.BLUE);
-        renderer.setXAxisMin(24);
-        renderer.setXAxisMax(48);
+        renderer.setXAxisMin(Xmin);
+        renderer.setXAxisMax(Xmax);
         renderer.setYAxisMin(0);
         renderer.setYAxisMax(200);
-        renderer.setXLabels(18);
-        double[] pan = {-1, 95.63, 0, 200};
+        renderer.setXLabels(26);
+        double[] pan = {0, 97, 0, 200};
         renderer.setPanLimits(pan);
         renderer.setShowLegend(false);
     }

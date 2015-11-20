@@ -147,7 +147,7 @@ public class PacketParser {
         String[] filenamelist = new File(mFilePath).list(new FilenameFilter() {
             @Override
             public boolean accept(File file, String s) {
-                if(s.matches("^(app)(\\([0-9]{14}\\))(\\.zip)$")){
+                if (s.matches("^(app)(\\([0-9]{14}\\))(\\.zip)$")) {
                     return true;
                 }
 
@@ -155,12 +155,12 @@ public class PacketParser {
             }
         });
         String newestFileName = "app(00000000000000).zip";
-        for (String filename:filenamelist){
-            if (filename.compareTo(newestFileName)>0){
+        for (String filename : filenamelist) {
+            if (filename.compareTo(newestFileName) > 0) {
                 newestFileName = filename;
             }
         }
-        File file = new File(mFilePath+newestFileName);
+        File file = new File(mFilePath + newestFileName);
         if (!file.exists()) {
             return;
         }
@@ -169,7 +169,7 @@ public class PacketParser {
         final DfuServiceInitiator starter = new DfuServiceInitiator(mDevice.getAddress())
                 .setDeviceName(mDevice.getName())
                 .setKeepBond(keepBond);
-        starter.setZip(mFilePath+newestFileName);
+        starter.setZip(mFilePath + newestFileName);
         starter.start(mContext, DfuService.class);
     }
 

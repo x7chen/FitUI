@@ -17,7 +17,7 @@
             <item android:id="@+id/nav_target" android:icon="@android:drawable/ic_menu_send"
                 android:title="目标" />
             <item android:id="@+id/nav_hour_format" android:icon="@android:drawable/ic_menu_share"
-                android:title="12/24小时制" />
+                android:title="12/24小时制" android:checkable="false"/>
             <item android:id="@+id/nav_hand" android:icon="@android:drawable/ic_menu_send"
                 android:title="左右手" />
             <item android:id="@+id/nav_phone_notify" android:icon="@android:drawable/ic_menu_share"

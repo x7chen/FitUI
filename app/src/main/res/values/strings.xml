@@ -12,6 +12,7 @@
     <string name="toolbar_menu_complete">完成</string>
     <string name="toolbar_menu_refresh">刷新</string>
     <string name="scan_connected">已连接</string>
+    <string name="steps">步</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

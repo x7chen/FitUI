@@ -13,7 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,15 @@ public class MainActivity extends AppCompatActivity
             Log.i(NusManager.TAG, "sport data mocked");
             switch (category) {
                 case PacketParser.RECEIVED_DAILY_DATA:
+                    if (mPacketParser != null) {
+                        final PacketParser.DailyData dailyData = mPacketParser.getDailyDataList();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                UpdateSportProgress(dailyData.Steps);
+                            }
+                        });
+                    }
                     break;
                 case PacketParser.RECEIVED_SPORT_DATA:
                     List<PacketParser.SportData> sportDataList;
@@ -156,7 +167,8 @@ public class MainActivity extends AppCompatActivity
         VerticalProgressBar progressBar = (VerticalProgressBar) findViewById(R.id.progressBar);
         progressBar.setProgress(66);
         progressBar.setIndeterminate(false);
-
+        int[] dat = new int[96];
+        UpdateChart(dat);
     }
 
     private void UpdateChart(int[] data) {
@@ -164,6 +176,13 @@ public class MainActivity extends AppCompatActivity
         View mBarChart = new BarChart(this).UpdateBarChar(data);
         layout.removeAllViews();
         layout.addView(mBarChart);
+    }
+
+    private void UpdateSportProgress(int steps) {
+        TextView textView = (TextView) findViewById(R.id.daily_steps);
+        textView.setText(steps + "步");
+        TextView textView_persentage = (TextView) findViewById(R.id.progress_percentage);
+        textView_persentage.setText((steps / 10) + "%");
     }
 
     @Override
@@ -192,8 +211,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.toolbar_refresh) {
-            mPacketParser.mock();
-//            progressBar.setVisibility(View.INVISIBLE);
+            mPacketParser.getDailyData();
+//            mPacketParser.mock();
             return true;
         }
 
@@ -214,12 +233,34 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_alarm) {
             Intent intent = new Intent(this, AlarmActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_sit_long) {
+        } else if (id == R.id.nav_target) {
+        } else if (id == R.id.nav_hour_format) {
+            item.setChecked(!(item.isChecked()));
+            if(item.isChecked()) {
+                mPacketParser.setHourFormat(1);
+            }else {
+                mPacketParser.setHourFormat(0);
+            }
+            return true;
         } else if (id == R.id.nav_hand) {
-
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_phone_notify) {
+            try {
+                mPacketParser.telNotify("s");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        } else if (id == R.id.nav_message_notify) {
+            try {
+                mPacketParser.infoNotify("i");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        } else if (id == R.id.nav_upgrade) {
+            Intent intent = new Intent(this, UpdateActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
