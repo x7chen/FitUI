@@ -81,7 +81,7 @@ public class BarChart {
         renderer.addSeriesRenderer(r);
         renderer.setApplyBackgroundColor(true);
         renderer.setBackgroundColor(Color.TRANSPARENT);
-        renderer.setMarginsColor(1);
+        renderer.setMarginsColor(Color.argb(0x0, 0x01, 0x01, 0x01));
         int[] margins = {0, 100, 0, 0};
         renderer.setMargins(margins);
         renderer.setLegendHeight(1);
@@ -111,16 +111,14 @@ public class BarChart {
                 stringBuffer.append(":");
                 stringBuffer.append(String.format("%02d", ((int) (value - 1) % 4) * 15));
             }
+            buffer.append(stringBuffer);
             return stringBuffer;
         }
 
         @Override
         public StringBuffer format(long value, StringBuffer buffer, FieldPosition field) {
-            StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append(String.format("%02d", ((value - 1) / 4)));
-            stringBuffer.append(":");
-            stringBuffer.append(String.format("%02d", ((value - 1) % 4) * 15));
-            return stringBuffer;
+
+            return format((double)value, buffer, field);
         }
 
         @Override
