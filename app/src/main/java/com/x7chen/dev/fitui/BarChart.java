@@ -60,6 +60,7 @@ public class BarChart {
         Random r = new Random();
 
         CategorySeries series = new CategorySeries("步数");
+        series.add(0);
         for (int k = 0; k < nr; k++) {
             series.add(100 + r.nextInt() % 50);
         }
@@ -102,14 +103,14 @@ public class BarChart {
         public StringBuffer format(double value, StringBuffer buffer, FieldPosition field) {
             StringBuffer stringBuffer = new StringBuffer();
             if (value > 0) {
-                stringBuffer.append(String.format("%02d", ((int) (value - 1) / 4)));
+                stringBuffer.append(String.format("%02d", ((int) (value - 2) / 4)));
                 stringBuffer.append(":");
-                stringBuffer.append(String.format("%02d", ((int) (value - 1) % 4) * 15));
+                stringBuffer.append(String.format("%02d", ((int) (value - 2) % 4) * 15));
             } else {
                 value += 96;
-                stringBuffer.append(String.format("%02d", ((int) (value - 1) / 4)));
+                stringBuffer.append(String.format("%02d", ((int) (value - 2) / 4)));
                 stringBuffer.append(":");
-                stringBuffer.append(String.format("%02d", ((int) (value - 1) % 4) * 15));
+                stringBuffer.append(String.format("%02d", ((int) (value - 2) % 4) * 15));
             }
             buffer.append(stringBuffer);
             return stringBuffer;
@@ -163,7 +164,7 @@ public class BarChart {
         renderer.setXAxisMax(Xmax);
         renderer.setYAxisMin(0);
         renderer.setYAxisMax(200);
-        renderer.setXLabels(26);
+        renderer.setXLabels(16);
         double[] pan = {0, 97, 0, 200};
         renderer.setPanLimits(pan);
         renderer.setShowLegend(false);
