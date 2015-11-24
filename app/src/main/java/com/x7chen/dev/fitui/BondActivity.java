@@ -95,7 +95,7 @@ public class BondActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.toolbar_refresh:
+            case R.id.menu_refresh:
                 if(mPacketParser == null){
                     scanLeDevice(true);
                     break;

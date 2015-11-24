@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item android:id="@+id/toolbar_add"
+    <item android:id="@+id/menu_add"
         android:orderInCategory="80"
-        android:title="@string/toolbar_menu_complete"
+        android:title="@string/toolbar_menu_add"
         app:showAsAction="ifRoom" />
 </menu>

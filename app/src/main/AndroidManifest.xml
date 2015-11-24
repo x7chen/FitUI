@@ -28,7 +28,8 @@
         <activity
             android:name=".AlarmActivity"
             android:label="@string/alarm_title"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop">
 >
         </activity>
         <activity
@@ -39,9 +40,11 @@
 
         <service android:name=".dfu.DfuService" />
 
-        <activity android:name=".UpdateActivity" >
+        <activity android:name=".UpdateActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".EditAlarmActivity" >
+        <activity android:name=".EditAlarmActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

@@ -5,16 +5,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class AlarmActivity extends AppCompatActivity {
     AlarmListAdapter mAlarmListAdapter;
@@ -27,10 +31,11 @@ public class AlarmActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_setting);
         toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);
         setSupportActionBar(toolbar);
-
+        Log.i(NusManager.TAG, "AlarmActivity onCreate");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPacketParser.setAlarmList(mAlarmListAdapter.getAlarmList());
                 finish();
             }
         });
@@ -40,6 +45,17 @@ public class AlarmActivity extends AppCompatActivity {
         ListView alarmlistview = (ListView) findViewById(R.id.alarm_listView);
         mAlarmListAdapter = new AlarmListAdapter(this);
         alarmlistview.setAdapter(mAlarmListAdapter);
+        alarmlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PacketParser.Alarm alarm = (PacketParser.Alarm)mAlarmListAdapter.getItem(position);
+                Intent intent = new Intent(AlarmActivity.this, EditAlarmActivity.class);
+                intent.putExtra("hour",alarm.Hour);
+                intent.putExtra("minute",alarm.Minute);
+                intent.putExtra("repeat",alarm.Repeat);
+                startActivityForResult(intent, position);
+            }
+        });
         mPacketParser.getAlarms();
 //        final PacketParser nPacktParse = mPacketParser;
 //        new Thread(new Runnable() {
@@ -60,7 +76,7 @@ public class AlarmActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                } else {
-//                    //Toast.makeText(AlarmActivity.this,"手环未连接",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(AlarmActivity.this, "手环未连接", Toast.LENGTH_SHORT).show();
 //                }
 //            }
 //
@@ -74,11 +90,44 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i(NusManager.TAG, "AlarmActivity onActivityResult" + requestCode + "#" + resultCode);
+        if (requestCode == 0x09) {
+            PacketParser.Alarm alarm = new PacketParser.Alarm();
+            alarm.Minute = data.getIntExtra("minute", 0);
+            alarm.Hour = data.getIntExtra("hour", 0);
+            alarm.Repeat = data.getIntExtra("repeat", 0);
+            alarm.ID = mAlarmListAdapter.getCount();
+            Calendar calendar = Calendar.getInstance();
+            alarm.Year = calendar.get(Calendar.YEAR) - 2000;
+            alarm.Month = calendar.get(Calendar.MONTH);
+            alarm.Day = calendar.get(Calendar.DAY_OF_MONTH);
+            mAlarmListAdapter.addAlarm(alarm);
+            mAlarmListAdapter.notifyDataSetChanged();
+        }
+        if (requestCode < 0x09) {
+            PacketParser.Alarm alarm = new PacketParser.Alarm();
+            alarm.Minute = data.getIntExtra("minute", 0);
+            alarm.Hour = data.getIntExtra("hour", 0);
+            alarm.Repeat = data.getIntExtra("repeat", 0);
+            alarm.ID = mAlarmListAdapter.getCount();
+            Calendar calendar = Calendar.getInstance();
+            alarm.Year = calendar.get(Calendar.YEAR) - 2000;
+            alarm.Month = calendar.get(Calendar.MONTH);
+            alarm.Day = calendar.get(Calendar.DAY_OF_MONTH);
+            mAlarmListAdapter.setAlarm(requestCode, alarm);
+            mAlarmListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.toolbar_add){
-            Intent intent = new Intent(this,EditAlarmActivity.class);
-            startActivity(intent);
+        if (id == R.id.menu_add) {
+            Intent intent = new Intent(AlarmActivity.this, EditAlarmActivity.class);
+            startActivityForResult(intent, 0x09);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -94,6 +143,12 @@ public class AlarmActivity extends AppCompatActivity {
             mInflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
+        public ArrayList<PacketParser.Alarm> getAlarmList() {
+            return mAlarms;
+        }
+        public void setAlarm(int i,PacketParser.Alarm alarm){
+            mAlarms.set(i,alarm);
+        }
         public void addAlarm(PacketParser.Alarm alarm) {
             mAlarms.add(alarm);
         }
@@ -137,7 +192,7 @@ public class AlarmActivity extends AppCompatActivity {
             char[] week = {'一', '二', '三', '四', '五', '六', '日'};
             stringBuilder.append("重复:  ");
             for (int r = 0; r < 7; r++) {
-                if ((alarm.Repeat & ((byte) (0x01 << i))) != 0) {
+                if ((alarm.Repeat & ((byte) (0x01 << r))) != 0) {
                     stringBuilder.append(week[r]);
                 } else {
                     stringBuilder.append("  ");
@@ -152,6 +207,12 @@ public class AlarmActivity extends AppCompatActivity {
         public void notifyDataSetChanged() {
             super.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(NusManager.TAG, "AlarmActivity onDestroy");
     }
 
     static class ViewHolder {
