@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -93,6 +92,9 @@ public class AlarmActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(NusManager.TAG, "AlarmActivity onActivityResult" + requestCode + "#" + resultCode);
+        if(resultCode == 0xFF){
+            return;
+        }
         if (requestCode == 0x09) {
             PacketParser.Alarm alarm = new PacketParser.Alarm();
             alarm.Minute = data.getIntExtra("minute", 0);

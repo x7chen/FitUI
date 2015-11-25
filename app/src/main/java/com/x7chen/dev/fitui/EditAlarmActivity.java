@@ -1,10 +1,14 @@
 package com.x7chen.dev.fitui;
 
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Printer;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -69,10 +73,10 @@ public class EditAlarmActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                EditAlarmActivity.this.setResult(0xFF, EditAlarmActivity.this.getIntent());
+                EditAlarmActivity.this.finish();
             }
         });
-
     }
 
     @Override
@@ -114,7 +118,7 @@ public class EditAlarmActivity extends AppCompatActivity {
             intent.putExtra("repeat", repeat);
             intent.putExtra("minute", minute);
             intent.putExtra("hour", hour);
-            setResult(0x09, intent);
+            setResult(0x00, intent);
             finish();
         }
         return super.onOptionsItemSelected(item);

@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onDataReceived(byte category) {
             StringBuilder stringBuilder;
-            Log.i(NusManager.TAG, "sport data mocked");
             switch (category) {
                 case PacketParser.RECEIVED_DAILY_DATA:
                     if (mPacketParser != null) {
@@ -226,7 +225,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_user_profile) {
-            // Handle the camera action
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_bond) {
             Intent intent = new Intent(this, BondActivity.class);
             startActivity(intent);

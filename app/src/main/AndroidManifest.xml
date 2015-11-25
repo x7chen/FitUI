@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.x7chen.dev.fitui" >
+    package="com.x7chen.dev.fitui">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -14,11 +14,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar" >
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,24 +28,25 @@
         <activity
             android:name=".AlarmActivity"
             android:label="@string/alarm_title"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop">
->
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
+            >
         </activity>
         <activity
             android:name=".BondActivity"
             android:label="@string/bond_title"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <service android:name=".dfu.DfuService" />
 
-        <activity android:name=".UpdateActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".EditAlarmActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity
+            android:name=".UpdateActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".EditAlarmActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".UserProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
