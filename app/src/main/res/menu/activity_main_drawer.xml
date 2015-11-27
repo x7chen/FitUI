@@ -24,6 +24,8 @@
                 android:title="来电提醒" />
             <item android:id="@+id/nav_message_notify" android:icon="@drawable/ic_chat_bubble_outline_black_36dp"
                 android:title="信息提醒" />
+            <item android:id="@+id/nav_sensor_test" android:icon="@drawable/ic_device_hub_black_36dp"
+                android:title="Sensor测试" />
         </menu>
     </item>
     <item android:title="版本">
