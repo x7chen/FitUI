@@ -20,7 +20,7 @@ public class UpdateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_setting);
-        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);
+        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         setSupportActionBar(toolbar);
         ApplicationContextHelper applicationContextHelper = (ApplicationContextHelper)getApplicationContext();
         mPacketParser = applicationContextHelper.getPacketParser();

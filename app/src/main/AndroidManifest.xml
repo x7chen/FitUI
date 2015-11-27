@@ -41,11 +41,14 @@
 
         <activity
             android:name=".UpdateActivity"
+            android:label="@string/upgrade_title"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".EditAlarmActivity"
+            android:label="@string/alarm_edit_title"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".UserProfileActivity"
+            android:label="@string/user_profile_title"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

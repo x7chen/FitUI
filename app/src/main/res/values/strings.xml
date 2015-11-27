@@ -6,7 +6,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="alarm_title">闹钟</string>
+    <string name="alarm_edit_title">闹钟编辑</string>
     <string name="bond_title">手环绑定</string>
+    <string name="upgrade_title">升级</string>
+    <string name="user_profile_title">我的资料</string>
     <string name="long_sit_title">久坐提醒</string>
     <string name="target_title">目标步数</string>
     <string name="toolbar_menu_complete">完成</string>

@@ -1,14 +1,10 @@
 package com.x7chen.dev.fitui;
 
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Printer;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +27,7 @@ public class EditAlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_alarm);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_setting);
-        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);
+        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         setSupportActionBar(toolbar);
         mTimePicker = (TimePicker) findViewById(R.id.timePicker);
         checkBoxMon = (CheckBox) findViewById(R.id.checkBox);
@@ -47,7 +43,6 @@ public class EditAlarmActivity extends AppCompatActivity {
         int repeat = intent.getIntExtra("repeat", 0);
         mTimePicker.setCurrentHour(hour);
         mTimePicker.setCurrentMinute(minute);
-
         if ((repeat & ((byte) (0x01 << 0))) != 0) {
             checkBoxMon.setChecked(true);
         }

@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
-        android:text="用户名"
+        android:text="用户"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
         android:layout_marginStart="59dp" />

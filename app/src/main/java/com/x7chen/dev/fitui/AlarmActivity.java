@@ -28,7 +28,8 @@ public class AlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_setting);
-        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);
+//        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);
+        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         setSupportActionBar(toolbar);
         Log.i(NusManager.TAG, "AlarmActivity onCreate");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
