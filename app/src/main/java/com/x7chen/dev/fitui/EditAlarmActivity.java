@@ -16,7 +16,7 @@ import com.x7chen.dev.fitui.MyView.WeekPicker;
 public class EditAlarmActivity extends AppCompatActivity {
 
     TimePicker mTimePicker;
-WeekPicker mWeekPicker;
+    WeekPicker mWeekPicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +26,15 @@ WeekPicker mWeekPicker;
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         setSupportActionBar(toolbar);
         mTimePicker = (TimePicker) findViewById(R.id.timePicker);
-        mWeekPicker = (WeekPicker)findViewById(R.id.weekPicker);
+        mWeekPicker = (WeekPicker) findViewById(R.id.weekPicker);
         Intent intent = getIntent();
         int minute = intent.getIntExtra("minute", 0);
         int hour = intent.getIntExtra("hour", 0);
         int repeat = intent.getIntExtra("repeat", 0);
         mTimePicker.setCurrentHour(hour);
         mTimePicker.setCurrentMinute(minute);
-        boolean[] weeks =new boolean[7];
-        for(int i=0;i<7;i++) {
+        boolean[] weeks = new boolean[7];
+        for (int i = 0; i < 7; i++) {
             if ((repeat & ((byte) (0x01 << i))) != 0) {
                 weeks[i] = true;
             }
@@ -62,7 +62,7 @@ WeekPicker mWeekPicker;
         if (id == R.id.menu_complete) {
             int repeat = 0;
             boolean[] weeks = mWeekPicker.getWeeks();
-            for(int i=0;i<7;i++) {
+            for (int i = 0; i < 7; i++) {
                 if (weeks[i]) {
                     repeat |= (1 << i);
                 }

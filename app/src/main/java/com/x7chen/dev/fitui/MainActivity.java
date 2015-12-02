@@ -1,6 +1,9 @@
 package com.x7chen.dev.fitui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -8,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -168,6 +172,12 @@ public class MainActivity extends AppCompatActivity
         progressBar.setIndeterminate(false);
         int[] dat = new int[96];
         UpdateChart(dat);
+
+        BroadcastReceiverMgr mBroadcastReceiver = new BroadcastReceiverMgr();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BroadcastReceiverMgr.B_PHONE_STATE);
+        intentFilter.setPriority(Integer.MAX_VALUE);
+        registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     private void UpdateChart(int[] data) {
@@ -268,5 +278,42 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    class BroadcastReceiverMgr extends BroadcastReceiver {
+        public final static String B_PHONE_STATE = TelephonyManager.ACTION_PHONE_STATE_CHANGED;
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
+            //呼入电话
+            if(action.equals(B_PHONE_STATE)){
+                doReceivePhone(context,intent);
+            }
+        }
+
+        /**
+         * 处理电话广播.
+         * @param context
+         * @param intent
+         */
+        public void doReceivePhone(Context context, Intent intent) {
+            String phoneNumber = intent.getStringExtra(
+                    TelephonyManager.EXTRA_INCOMING_NUMBER);
+            TelephonyManager telephony =
+                    (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+            int state = telephony.getCallState();
+            switch(state){
+                case TelephonyManager.CALL_STATE_RINGING:
+                    try {
+                        mPacketParser.telNotify("s");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case TelephonyManager.CALL_STATE_IDLE:
+                    break;
+                case TelephonyManager.CALL_STATE_OFFHOOK:
+                    break;
+            }
+        }
+    }
 }

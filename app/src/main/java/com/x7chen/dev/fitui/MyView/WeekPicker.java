@@ -21,8 +21,8 @@ public class WeekPicker extends View {
     int ITEM_WIDTH = 80;
     int ITEM_HEIGHT = ITEM_WIDTH;
     int ITEM_SPACE = 30;
-    int VIEW_PADING = 10;
-    int ITEM_PADING = 10;
+    int VIEW_PADDING = 10;
+    int ITEM_PADDING = 10;
     int ITEM_TEXT_SIZE = 60;
     ArrayList<ItemArea> itemAreas = new ArrayList<>(7);
 
@@ -30,10 +30,10 @@ public class WeekPicker extends View {
         itemAreas.clear();
         for (int i = 0; i < 7; i++) {
             ItemArea itemArea = new ItemArea();
-            itemArea.left = VIEW_PADING + i * (ITEM_WIDTH + ITEM_SPACE);
-            itemArea.top = VIEW_PADING;
-            itemArea.right = VIEW_PADING + i * (ITEM_WIDTH + ITEM_SPACE) + ITEM_WIDTH;
-            itemArea.bottom = VIEW_PADING + ITEM_HEIGHT;
+            itemArea.left = VIEW_PADDING + i * (ITEM_WIDTH + ITEM_SPACE);
+            itemArea.top = VIEW_PADDING;
+            itemArea.right = VIEW_PADDING + i * (ITEM_WIDTH + ITEM_SPACE) + ITEM_WIDTH;
+            itemArea.bottom = VIEW_PADDING + ITEM_HEIGHT;
             itemAreas.add(itemArea);
         }
     }
@@ -70,23 +70,27 @@ public class WeekPicker extends View {
                 //画填充色
                 mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                 mPaint.setColor(getResources().getColor(R.color.colorAccent));
-                canvas.drawRect(itemAreas.get(w).left, itemAreas.get(w).top, itemAreas.get(w).right, itemAreas.get(w).bottom, mPaint);
+//                canvas.drawRect(itemAreas.get(w).left, itemAreas.get(w).top, itemAreas.get(w).right, itemAreas.get(w).bottom, mPaint);
+                mPaint.setAntiAlias(true);
+                canvas.drawCircle((itemAreas.get(w).left+itemAreas.get(w).right)/2,(itemAreas.get(w).top+itemAreas.get(w).bottom)/2,ITEM_HEIGHT/2,mPaint);
                 //画汉字
                 mPaint.setStyle(Paint.Style.FILL);
                 mPaint.setTextSize(ITEM_TEXT_SIZE);
                 mPaint.setColor(Color.WHITE);
-                canvas.drawText(weeks[w], itemAreas.get(w).left + ITEM_PADING, itemAreas.get(w).bottom - ITEM_PADING * 2, mPaint);
+                canvas.drawText(weeks[w], itemAreas.get(w).left + ITEM_PADDING, itemAreas.get(w).bottom - ITEM_PADDING * 2, mPaint);
             } else {
                 //画边框
                 mPaint.setStyle(Paint.Style.STROKE);
                 mPaint.setStrokeWidth(2);
                 mPaint.setColor(Color.GRAY);
-                canvas.drawRect(itemAreas.get(w).left, itemAreas.get(w).top, itemAreas.get(w).right, itemAreas.get(w).bottom, mPaint);
+                mPaint.setAntiAlias(true);
+//                canvas.drawRect(itemAreas.get(w).left, itemAreas.get(w).top, itemAreas.get(w).right, itemAreas.get(w).bottom, mPaint);
+                canvas.drawCircle((itemAreas.get(w).left + itemAreas.get(w).right) / 2, (itemAreas.get(w).top + itemAreas.get(w).bottom)/2,ITEM_HEIGHT/2,mPaint);
                 //画汉字
                 mPaint.setStyle(Paint.Style.FILL);
                 mPaint.setTextSize(ITEM_TEXT_SIZE);
                 mPaint.setColor(Color.GRAY);
-                canvas.drawText(weeks[w], itemAreas.get(w).left + ITEM_PADING, itemAreas.get(w).bottom - ITEM_PADING * 2, mPaint);
+                canvas.drawText(weeks[w], itemAreas.get(w).left + ITEM_PADDING, itemAreas.get(w).bottom - ITEM_PADDING * 2, mPaint);
             }
         }
 
@@ -94,8 +98,8 @@ public class WeekPicker extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        widthMeasureSpec = MeasureSpec.getMode(widthMeasureSpec) + VIEW_PADING * 2 + ITEM_WIDTH * 7 + ITEM_SPACE * 6;
-        heightMeasureSpec = MeasureSpec.getMode(heightMeasureSpec) + VIEW_PADING * 2 + ITEM_HEIGHT;
+        widthMeasureSpec = MeasureSpec.getMode(widthMeasureSpec) + VIEW_PADDING * 2 + ITEM_WIDTH * 7 + ITEM_SPACE * 6;
+        heightMeasureSpec = MeasureSpec.getMode(heightMeasureSpec) + VIEW_PADDING * 2 + ITEM_HEIGHT;
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
