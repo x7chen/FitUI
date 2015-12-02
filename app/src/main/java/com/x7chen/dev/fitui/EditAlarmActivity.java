@@ -11,16 +11,12 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TimePicker;
 
+import com.x7chen.dev.fitui.MyView.WeekPicker;
+
 public class EditAlarmActivity extends AppCompatActivity {
 
     TimePicker mTimePicker;
-    CheckBox checkBoxMon;
-    CheckBox checkBoxTue;
-    CheckBox checkBoxWed;
-    CheckBox checkBoxThur;
-    CheckBox checkBoxFri;
-    CheckBox checkBoxSat;
-    CheckBox checkBoxSun;
+WeekPicker mWeekPicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,40 +26,20 @@ public class EditAlarmActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         setSupportActionBar(toolbar);
         mTimePicker = (TimePicker) findViewById(R.id.timePicker);
-        checkBoxMon = (CheckBox) findViewById(R.id.checkBox);
-        checkBoxTue = (CheckBox) findViewById(R.id.checkBox2);
-        checkBoxWed = (CheckBox) findViewById(R.id.checkBox3);
-        checkBoxThur = (CheckBox) findViewById(R.id.checkBox4);
-        checkBoxFri = (CheckBox) findViewById(R.id.checkBox5);
-        checkBoxSat = (CheckBox) findViewById(R.id.checkBox6);
-        checkBoxSun = (CheckBox) findViewById(R.id.checkBox7);
+        mWeekPicker = (WeekPicker)findViewById(R.id.weekPicker);
         Intent intent = getIntent();
         int minute = intent.getIntExtra("minute", 0);
         int hour = intent.getIntExtra("hour", 0);
         int repeat = intent.getIntExtra("repeat", 0);
         mTimePicker.setCurrentHour(hour);
         mTimePicker.setCurrentMinute(minute);
-        if ((repeat & ((byte) (0x01 << 0))) != 0) {
-            checkBoxMon.setChecked(true);
+        boolean[] weeks =new boolean[7];
+        for(int i=0;i<7;i++) {
+            if ((repeat & ((byte) (0x01 << i))) != 0) {
+                weeks[i] = true;
+            }
         }
-        if ((repeat & ((byte) (0x01 << 1))) != 0) {
-            checkBoxTue.setChecked(true);
-        }
-        if ((repeat & ((byte) (0x01 << 2))) != 0) {
-            checkBoxWed.setChecked(true);
-        }
-        if ((repeat & ((byte) (0x01 << 3))) != 0) {
-            checkBoxThur.setChecked(true);
-        }
-        if ((repeat & ((byte) (0x01 << 4))) != 0) {
-            checkBoxFri.setChecked(true);
-        }
-        if ((repeat & ((byte) (0x01 << 5))) != 0) {
-            checkBoxSat.setChecked(true);
-        }
-        if ((repeat & ((byte) (0x01 << 6))) != 0) {
-            checkBoxSun.setChecked(true);
-        }
+        mWeekPicker.setWeeks(weeks);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,26 +61,11 @@ public class EditAlarmActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.menu_complete) {
             int repeat = 0;
-            if (checkBoxMon.isChecked()) {
-                repeat |= (1);
-            }
-            if (checkBoxTue.isChecked()) {
-                repeat |= (1 << 1);
-            }
-            if (checkBoxWed.isChecked()) {
-                repeat |= (1 << 2);
-            }
-            if (checkBoxThur.isChecked()) {
-                repeat |= (1 << 3);
-            }
-            if (checkBoxFri.isChecked()) {
-                repeat |= (1 << 4);
-            }
-            if (checkBoxSat.isChecked()) {
-                repeat |= (1 << 5);
-            }
-            if (checkBoxSun.isChecked()) {
-                repeat |= (1 << 6);
+            boolean[] weeks = mWeekPicker.getWeeks();
+            for(int i=0;i<7;i++) {
+                if (weeks[i]) {
+                    repeat |= (1 << i);
+                }
             }
             Log.i(NusManager.TAG, "repeat:" + repeat);
             int hour = mTimePicker.getCurrentHour();
