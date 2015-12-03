@@ -42,7 +42,15 @@ public class AlarmActivity extends AppCompatActivity {
         ApplicationContextHelper applicationContextHelper = (ApplicationContextHelper) getApplicationContext();
         mPacketParser = applicationContextHelper.getPacketParser();
         applicationContextHelper.setAlarmActivity(this);
-        ListView alarmlistview = (ListView) findViewById(R.id.alarm_listView);
+        SlideCutListView alarmlistview = (SlideCutListView) findViewById(R.id.alarm_listView);
+        alarmlistview.setRemoveListener(new SlideCutListView.RemoveListener() {
+            @Override
+            public void removeItem(SlideCutListView.RemoveDirection direction, int position) {
+                mAlarmListAdapter.removeAlarm(position);
+                mAlarmListAdapter.notifyDataSetChanged();
+
+            }
+        });
         mAlarmListAdapter = new AlarmListAdapter(this);
         alarmlistview.setAdapter(mAlarmListAdapter);
         alarmlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -155,7 +163,9 @@ public class AlarmActivity extends AppCompatActivity {
         public void addAlarm(PacketParser.Alarm alarm) {
             mAlarms.add(alarm);
         }
-
+        public void removeAlarm(int position){
+            mAlarms.remove(position);
+        }
         @Override
         public int getCount() {
             return mAlarms.size();

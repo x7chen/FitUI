@@ -5,7 +5,7 @@
     tools:context="com.x7chen.dev.fitui.AlarmActivity">
     <include layout="@layout/app_bar_setting" android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <ListView
+    <com.x7chen.dev.fitui.SlideCutListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/alarm_listView"

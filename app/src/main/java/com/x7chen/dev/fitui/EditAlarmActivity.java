@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.TimePicker;
 
 import com.x7chen.dev.fitui.MyView.WeekPicker;
@@ -52,7 +51,7 @@ public class EditAlarmActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_setting, menu);
+        getMenuInflater().inflate(R.menu.menu_complete, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
