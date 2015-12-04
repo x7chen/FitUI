@@ -32,7 +32,7 @@
         <menu>
             <item android:id="@+id/nav_upgrade" android:icon="@drawable/ic_backup_black_36dp"
                 android:title="升级" />
-            <item android:id="@+id/nav_abort" android:icon="@drawable/ic_all_inclusive_black_36dp"
+            <item android:id="@+id/nav_about" android:icon="@drawable/ic_all_inclusive_black_36dp"
                 android:title="关于" />
         </menu>
     </item>

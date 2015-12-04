@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/side_nav_bar"
+    android:gravity="center_horizontal"
+    android:id="@+id/layout_target_edit">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="目标："
+        android:textSize="20dp"
+        android:layout_marginLeft="20dp" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/TargetEditer"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:inputType="number" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="步"
+        android:id="@+id/textView2"
+        android:textSize="20dp"
+        android:layout_marginRight="20dp" />
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="确定"
+        android:id="@+id/bt_target_ok"
+        android:layout_marginRight="10dp"
+        android:background="#00ffffff" />
+</LinearLayout>

@@ -9,10 +9,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +25,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    int TargetSteps;
     ApplicationContextHelper applicationContextHelper;
+    NavigationView navigationView;
     private PacketParser mPacketParser;
     PacketParser.CallBack mPacketParserCallBack = new PacketParser.CallBack() {
         @Override
@@ -157,15 +159,16 @@ public class MainActivity extends AppCompatActivity
 //                        .setAction("Action", null).show();
 //            }
 //        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        startService(new Intent(this, NotificationCollectorService.class));
 
         VerticalProgressBar progressBar = (VerticalProgressBar) findViewById(R.id.progressBar);
         progressBar.setProgress(66);
@@ -228,7 +231,17 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    TargetEditDialog.CallBacks targetCallBacks = new TargetEditDialog.CallBacks() {
+        @Override
+        public void updateTarget(int target) {
+            TargetSteps = target;
+            MenuItem item = navigationView.getMenu().findItem(R.id.nav_target);
+            item.setTitle(item.getTitle().subSequence(0, 2) + "          " + TargetSteps);
+            navigationView.invalidate();
+            mPacketParser.setTarget(target);
+        }
+    };
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -244,12 +257,15 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, AlarmActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_sit_long) {
+            Intent intent = new Intent(this, LongSitActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_target) {
+            showTargetEdit();
         } else if (id == R.id.nav_hour_format) {
             item.setChecked(!(item.isChecked()));
-            if(item.isChecked()) {
+            if (item.isChecked()) {
                 mPacketParser.setHourFormat(1);
-            }else {
+            } else {
                 mPacketParser.setHourFormat(0);
             }
             return true;
@@ -271,6 +287,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_upgrade) {
             Intent intent = new Intent(this, UpdateActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_about) {
+            showAbout();
         }
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -278,20 +296,37 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    void showAbout() {
+        AlertDialog.Builder aBuilder = new AlertDialog.Builder(this);
+        aBuilder.setTitle("About");
+        aBuilder.setIcon(R.drawable.ic_all_inclusive_black_36dp);
+        aBuilder.setMessage("Version:1.0");
+        aBuilder.create().show();
+    }
+
+    void showTargetEdit() {
+        TargetEditDialog showTargetEdit = new TargetEditDialog(this);
+        showTargetEdit.setCallBacks(targetCallBacks);
+        showTargetEdit.setTargetSteps(TargetSteps);
+        showTargetEdit.show();
+    }
+
     class BroadcastReceiverMgr extends BroadcastReceiver {
         public final static String B_PHONE_STATE = TelephonyManager.ACTION_PHONE_STATE_CHANGED;
+
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
             //呼入电话
-            if(action.equals(B_PHONE_STATE)){
-                doReceivePhone(context,intent);
+            if (action.equals(B_PHONE_STATE)) {
+                doReceivePhone(context, intent);
             }
         }
 
         /**
          * 处理电话广播.
+         *
          * @param context
          * @param intent
          */
@@ -299,9 +334,9 @@ public class MainActivity extends AppCompatActivity
             String phoneNumber = intent.getStringExtra(
                     TelephonyManager.EXTRA_INCOMING_NUMBER);
             TelephonyManager telephony =
-                    (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+                    (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             int state = telephony.getCallState();
-            switch(state){
+            switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:
                     try {
                         mPacketParser.telNotify("s");
