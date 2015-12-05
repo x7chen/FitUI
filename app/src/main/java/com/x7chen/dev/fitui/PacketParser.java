@@ -207,48 +207,6 @@ public class PacketParser {
         mPacketCallBack = callBack;
     }
 
-    private void sendACK(Packet rPacket, boolean error) {
-        Packet.L1Header l1Header = new Packet.L1Header();
-        l1Header.setLength((short) 0);
-        l1Header.setACK(true);
-        l1Header.setError(error);
-        l1Header.setSequenceId(rPacket.getL1Header().getSequenceId());
-        l1Header.setCRC16((short) 0);
-        send_packet.setL1Header(l1Header);
-        send_packet.setPacketValue(null, false);
-        send_packet.print();
-
-        final byte[] data = send_packet.toByteArray();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final int packLength = 20;
-                int lastLength = data.length;
-                byte[] sendData;
-                int sendIndex = 0;
-                while (lastLength > 0) {
-                    if (lastLength <= packLength) {
-                        sendData = Arrays.copyOfRange(data, sendIndex, sendIndex + lastLength);
-                        sendIndex += lastLength;
-                        lastLength = 0;
-                    } else {
-                        sendData = Arrays.copyOfRange(data, sendIndex, sendIndex + packLength);
-                        sendIndex += packLength;
-                        lastLength -= packLength;
-                    }
-                    try {
-                        Thread.sleep(50L);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    mNusManager.send(sendData);
-                }
-            }
-        }).start();
-        sendTimerThread.setStatus(TimerThread.STOP);
-        writeLog("Send ACK:" + send_packet.toString());
-    }
-
     public int getVersion() {
         return mVERSION;
     }
@@ -1004,7 +962,23 @@ public class PacketParser {
             }
         }.start();
     }
+    private void sendACK(Packet rPacket, boolean error) {
+        Packet.L1Header l1Header = new Packet.L1Header();
+        l1Header.setLength((short) 0);
+        l1Header.setACK(true);
+        l1Header.setError(error);
+        l1Header.setSequenceId(rPacket.getL1Header().getSequenceId());
+        l1Header.setCRC16((short) 0);
+        send_packet.setL1Header(l1Header);
+        send_packet.setPacketValue(null, false);
+        send_packet.print();
 
+        final byte[] data = send_packet.toByteArray();
+        mSendThread = new sendThread(data);
+        mSendThread.start();
+        sendTimerThread.setStatus(TimerThread.STOP);
+        writeLog("Send ACK:" + send_packet.toString());
+    }
     private void send(Packet packet) {
 
         final byte[] data = packet.toByteArray();
@@ -1031,7 +1005,7 @@ public class PacketParser {
 
         public void run() {
             final int packLength = 20;
-            int lastLength = mData.length;
+            int leftLength = mData.length;
             byte[] sendData;
             int sendIndex = 0;
             try {
@@ -1039,15 +1013,15 @@ public class PacketParser {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            while (lastLength > 0) {
-                if (lastLength <= packLength) {
-                    sendData = Arrays.copyOfRange(mData, sendIndex, sendIndex + lastLength);
-                    sendIndex += lastLength;
-                    lastLength = 0;
+            while (leftLength > 0) {
+                if (leftLength <= packLength) {
+                    sendData = Arrays.copyOfRange(mData, sendIndex, sendIndex + leftLength);
+                    sendIndex += leftLength;
+                    leftLength = 0;
                 } else {
                     sendData = Arrays.copyOfRange(mData, sendIndex, sendIndex + packLength);
                     sendIndex += packLength;
-                    lastLength -= packLength;
+                    leftLength -= packLength;
                 }
                 do {
                     try {
