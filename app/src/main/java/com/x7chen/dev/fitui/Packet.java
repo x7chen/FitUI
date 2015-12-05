@@ -15,7 +15,7 @@ public class Packet {
     List<Byte> mPacket = new ArrayList<Byte>();
     static short mSequenceId = 0;
     CRC16 crc16 = new CRC16();
-    int mPacketError;
+
 
     Packet(byte[] value) {
 
@@ -58,7 +58,7 @@ public class Packet {
         List<Byte> nPacket = new ArrayList<Byte>();
         nPacket.addAll(l1header.toList());
         //subList(起始（包含），终止（不包含））
-        if(mPacket.size() > 8) {
+        if (mPacket.size() > 8) {
             nPacket.addAll(mPacket.subList(8, mPacket.size()));
         }
         mPacket = nPacket;
@@ -108,40 +108,45 @@ public class Packet {
     }
 
     public int checkPacket() {
-
+        int mPacketError = 0;
+        //判断包总长度，如果超过512，为无效包
         if (mPacket.size() > 512) {
             mPacket.clear();
         }
+        //获取L1Header
         L1Header aL1Header = getL1Header();
-        PacketValue aPacketValue = getPacketValue();
-        mPacketError = 0;
-
+        //L1Header为空（L1Header不完整也返回空），返回错误码03，通知接收器继续接收
         if ((aL1Header == null)) {
             mPacketError = 0x03;
             return mPacketError;
         }
-
-        if (aL1Header.toList().get(0).byteValue() != (byte)0xAB) {
+        //L1Header不为空，判断第一个字节是否为0xAB，不是则返回错误码05
+        if (aL1Header.toList().get(0).byteValue() != (byte) 0xAB) {
             mPacketError = 0x05;
             return mPacketError;
         }
+        //判断此包是否为ACK包，并将状态码返回给接收器
         if (aL1Header.getAckError() != 0x00) {
             mPacketError = aL1Header.getAckError();
             return mPacketError;
         }
-
+        //获取L2及数据
+        PacketValue aPacketValue = getPacketValue();
+        //判断L2及数据是否为空（数据不完整也返回空），为空返回错误码0x07，通知接受器继续接收
         if ((aPacketValue == null)) {
             mPacketError = 0x07;
             return mPacketError;
         }
+        //判断接受长度是否超出包长度，超出则返回错误码0x09，通知接受器此包无效
         if (aL1Header.getLength() > aPacketValue.toList().size()) {
             mPacketError = 0x09;
             return mPacketError;
         }
+        //计算CRC16，并校验
         Byte[] aPacketValueBytes = new Byte[aPacketValue.toList().size()];
         aPacketValue.toList().toArray(aPacketValueBytes);
         short crc = crc16.getCrc(aPacketValueBytes);
-
+        //CRC16校验不通过，返回错误码0x0B,校验通过则返回0
         if (aL1Header.getCRC16() != crc) {
 
             mPacketError = 0x0B;
@@ -156,7 +161,7 @@ public class Packet {
     }
 
     public boolean isChecked() {
-        return (mPacketError == 0);
+        return (checkPacket() == 0);
     }
 
     public void print() {
@@ -167,8 +172,9 @@ public class Packet {
         strBuilder.append("\n");
         Log.i(NusManager.TAG, strBuilder.toString());
     }
+
     @Override
-    public  String toString(){
+    public String toString() {
         StringBuilder strBuilder = new StringBuilder();
         for (byte bb : toByteArray()) {
             strBuilder.append(String.format("%02X ", bb));
@@ -176,13 +182,14 @@ public class Packet {
         strBuilder.append("\n");
         return strBuilder.toString();
     }
-    public static void Print(List<Byte> data){
+
+    public static void Print(List<Byte> data) {
         StringBuilder strBuilder = new StringBuilder();
         for (byte bb : data) {
             strBuilder.append(String.format("%02X ", bb));
         }
         strBuilder.append("\n");
-        Log.i(NusManager.TAG, "Print:"+strBuilder.toString());
+        Log.i(NusManager.TAG, "Print:" + strBuilder.toString());
     }
 
 
